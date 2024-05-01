@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StarWarsAPI
 {
-    internal class Person
+    internal class Person : StarWars
     {
         public string name { get; set; }
         public string height { get; set; }
@@ -24,6 +24,8 @@ namespace StarWarsAPI
         public DateTime created { get; set; }
         public DateTime edited { get; set; }
         public string url { get; set; }
+
+        public Person() { }
 
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StarWarsAPI
 {
-    internal class Planet
+    internal class Planet : StarWars
     {
         public string name { get; set; }
         public string rotation_period { get; set; }
@@ -23,9 +23,6 @@ namespace StarWarsAPI
         public DateTime edited { get; set; }
         public string url { get; set; } 
 
-
-
-
-
+        public Planet () { }
     }
 }

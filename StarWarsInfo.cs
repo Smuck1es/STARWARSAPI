@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace StarWarsAPI
 {
-    public partial class Form1 : Form
+    public partial class StarWarsInfo : Form
     {
-        public Form1()
+        public StarWarsInfo()
         {
             InitializeComponent();
         }
@@ -22,16 +22,22 @@ namespace StarWarsAPI
 
         }
 
+        // <summary>
+        // Gets information related to a planet specified by a users inputed id
+        // </summary>
         private async void GetPlanet_Click(object sender, EventArgs e)
         {
             string planetID = txbID.Text;
 
+            // Ensure the user inputed an intege
             if (int.TryParse(planetID, out int id))
             {
+                // Makes sure that the user inputed an existing planet
                 if (id >= 1 && id <= 61)
                 {
                     Planet planet = await JSONHelper.GetPlanet(planetID);
 
+                    //Concatenates planet info into a string
                     string planetInfo = $"Name: {planet.name}\n" +
                                $"Rotation Period: {planet.rotation_period}\n" +
                                $"Orbital Period: {planet.orbital_period}\n" +
@@ -71,6 +77,10 @@ namespace StarWarsAPI
 
         }
 
+        // <summary>
+        // Gets information related to a person specified by a users inputed id
+        // </summary>
+      
         private async void GetPerson_btn_Click(object sender, EventArgs e)
         {
             string personID = txbID.Text;
@@ -93,6 +103,8 @@ namespace StarWarsAPI
                                 $"Films: {string.Join(", ", person.films)}\n" +
                                 $"Species: {string.Join(", ", person.species)}\n" +
                                 $"Vehicles: {string.Join(", ", person.vehicles)}\n" +
+
+                                // Turns the long url of starhips into their names
                                 $"Starships: {await GetStarshipsNames(person.starships)}\n" +
                                 $"Created: {person.created.ToString("yyyy-MM-dd HH:mm:ss")}\n" +
                                 $"Edited: {person.edited.ToString("yyyy-MM-dd HH:mm:ss")}\n" +
@@ -112,10 +124,15 @@ namespace StarWarsAPI
             }
         }
 
+  
+        // <summary>    
+        // Grab every starship is a list of starship urls
+        // </summary>
         private async Task<string> GetStarshipsNames(List<string> starshipUrls)
         {
             List<string> starshipNames = new List<string>();
 
+            // For every url in the list it grabs a name and adds it to starshipNames
             foreach (string url in starshipUrls) 
             {
 
@@ -123,9 +140,13 @@ namespace StarWarsAPI
                 starshipNames.Add(starship.name);
             }
 
+            // Return the list of starship names converted from urls
             return string.Join(", ", starshipNames);
         }
 
+        // <summary>
+        // Gets information related to a species specified by a users inputed id
+        // </summary>
         private async void GetSpecies_btn_Click(object sender, EventArgs e)
         {
             string speciesID = txbID.Text;
@@ -167,6 +188,9 @@ namespace StarWarsAPI
 
         }
 
+        // <summary>
+        // Gets all information about Star Wars Species and displays them in a listbox
+        // </summary>
         private async void GetAllSpecies_btn_Click(object sender, EventArgs e)
         {
             AllSpecies allSpecies = await JSONHelper.GetAllSpecies();
@@ -174,7 +198,7 @@ namespace StarWarsAPI
             if (allSpecies != null && allSpecies.results != null)
             {
              
-
+                // Repeats over every species and add information to a test box
                 foreach (var species in allSpecies.results)
                 {
                     lsbSpecies.Items.Add($"Name: {species.name}");
@@ -199,6 +223,113 @@ namespace StarWarsAPI
             else
             {
                 MessageBox.Show("No species found.");
+            }
+        }
+
+        // <summary>
+        // Gets all information about Star Wars films and displays them 
+        // </summary>
+        private async void GetFilmInfo_btn_Click(object sender, EventArgs e)
+        {
+            string movieID = txbFilmID.Text;
+
+            if (int.TryParse(movieID, out int id))
+            {
+                if (id >= 1 && id <= 7)
+                {
+                    Films film = await JSONHelper.GetFilms(movieID);
+
+
+                    string filmInfo = $"Title: {film.title}\n" +
+                                   $"Episode ID: {film.episode_id}\n" +
+                                   $"Opening Crawl: {film.opening_crawl}\n" +
+                                   $"Director: {film.director}\n" +
+                                   $"Producer(s): {film.producer}\n" +
+                                   $"Release Date: {film.release_date.ToString("yyyy-MM-dd")}\n" +
+                                   $"Species: {string.Join(", ", film.species)}\n" +
+                                   $"Starships: {await GetStarshipsNames(film.starships)}\n" +
+                                   $"Vehicles: {string.Join(", ", film.vehicles)}\n" +
+                                   $"Characters: {string.Join(", ", film.characters)}\n" +
+                                   $"Planets: {string.Join(", ", film.planets)}\n" +
+                                   $"URL: {film.url}\n" +
+                                   $"Created: {film.created}\n" +
+                                   $"Edited: {film.edited}";
+
+                    lblInfo.Text = filmInfo;
+                }
+                else
+                {
+                    MessageBox.Show("Please enter a film ID between 1 and 7");
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("Please enter a film ID");
+            }
+
+        }
+
+        private void txbFilmID_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        // <summary>
+        // Gets all information about Star Wars starship and compares the speed to eachother outputting which is faster 
+        // </summary>
+        private async void compareStarship_btn_Click(object sender, EventArgs e)
+        {
+            string starShipOneID = starshipOne_txb.Text;
+            string starShipTwoID = starshipTwo_txb.Text;
+        
+            if (int.TryParse(starShipOneID, out int id1) && int.TryParse(starShipTwoID, out int id2))
+            {
+                if (id1 >= 1 && id1 <= 37 && id2 >= 1 && id2 <= 37)
+                {
+                    Starship starship1 = await JSONHelper.GetStarship(starShipOneID);
+                    Starship starship2 = await JSONHelper.GetStarship(starShipTwoID);
+
+                    int speed1, speed2;
+
+                    // If can be converted to int then it compares otherwise print and error message because max speed isn't avaliable
+                    if (int.TryParse(starship1.max_atmosphering_speed, out speed1) &&
+                        int.TryParse(starship2.max_atmosphering_speed, out speed2))
+                    {
+                        string result;
+                        if (speed1 > speed2)
+                        {
+                            result = $"{starship1.name} is faster than {starship2.name}";
+                        }
+                        else if (speed1 < speed2)
+                        {
+                            result = $"{starship2.name} is faster than {starship1.name}";
+                        }
+                        else
+                        {
+                            result = $"{starship1.name} and {starship2.name} have the same maximum speed";
+                        }
+                        resultLbl.Text = result;
+                    }
+                    else
+                    {
+                        resultLbl.Text = "One or both starships have invalid maximum speed";
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Please enter a starship ID between 1 and 37");
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("Please enter a starship ID");
             }
         }
     }

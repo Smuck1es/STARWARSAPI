@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StarWarsAPI
 {
-    internal class Starship
+    internal class Starship : StarWars
     {
         public string name { get; set; }
         public string model { get; set; }
@@ -26,5 +26,8 @@ namespace StarWarsAPI
         public string url { get; set; }
         public DateTime created { get; set; }
         public DateTime edited { get; set; }
+
+        public Starship() { }
+
     }
 }

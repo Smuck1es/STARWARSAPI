@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StarWarsAPI
 {
-    internal class Species
+    internal class Species : StarWars
     {
         public string name { get; set; }
         public string classification { get; set; }
@@ -23,6 +23,9 @@ namespace StarWarsAPI
         public string url { get; set; }
         public DateTime created { get; set; }
         public DateTime edited { get; set; }
+
+        public Species() { }
+
     }
     internal class AllSpecies
     {
@@ -30,6 +33,8 @@ namespace StarWarsAPI
         public string next { get; set; }
         public object previous { get; set; }
         public List<Species> results { get; set; }
+
+        public AllSpecies() { }
     }
 
 }
